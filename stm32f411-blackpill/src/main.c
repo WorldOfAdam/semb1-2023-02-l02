@@ -47,6 +47,7 @@
 #define STM32_GPIOC_PUPDR        (STM32_GPIOC_BASE+STM32_GPIO_PUPDR_OFFSET)
 #define STM32_GPIOC_ODR          (STM32_GPIOC_BASE+STM32_GPIO_ODR_OFFSET)
 #define STM32_GPIOC_BSRR         (STM32_GPIOC_BASE+STM32_GPIO_BSRR_OFFSET)
+#define STM32_GPIOC_IDR          (STM32_GPIOC_BASE+STM32_GPIO_IDR_OFFSET)
 
 #define STM32_GPIOA_MODER        (STM32_GPIOA_BASE+STM32_GPIO_MODER_OFFSET)
 #define STM32_GPIOA_OTYPER       (STM32_GPIOA_BASE+STM32_GPIO_OTYPER_OFFSET)
@@ -133,6 +134,7 @@ int main(int argc, char *argv[])
   uint32_t *pGPIOC_OTYPER = (uint32_t *)STM32_GPIOC_OTYPER;
   uint32_t *pGPIOC_PUPDR  = (uint32_t *)STM32_GPIOC_PUPDR;
   uint32_t *pGPIOC_BSRR   = (uint32_t *)STM32_GPIOC_BSRR;
+  uint32_t *pGPIOC_IDR    = (uint32_t *)STM32_GPIOC_IDR;
 
   /* Habilita clock GPIOC */
 
@@ -195,12 +197,25 @@ int main(int argc, char *argv[])
 
       /* Verifica se botao foi pressionado */
 
-      if( ((*pGPIOA_IDR) & GPIO_IDR_MASK(BUTTON)) == LOW) {
+      /*EXERCICIO 1*/
+      /*if( ((*pGPIOA_IDR) & GPIO_IDR_MASK(BUTTON)) == LOW) {
         *pGPIOC_BSRR = GPIO_BSRR_RESET(LED);
 
       } else if ( ((*pGPIOA_IDR) & GPIO_IDR_MASK(BUTTON)) == HIGH){
         *pGPIOC_BSRR = GPIO_BSRR_SET(LED); 
+      }*/
+
+      /*EXERCICIO 2*/
+      if( ((*pGPIOA_IDR) & GPIO_IDR_MASK(BUTTON)) ) {
+        uint8_t estadoInicial =  *pGPIOC_IDR & GPIO_IDR_MASK(LED);
+
+        if(estadoInicial == LOW){
+          *pGPIOC_BSRR = GPIO_BSRR_SET(LED);
+        } else {
+          *pGPIOC_BSRR = GPIO_BSRR_RESET(LED);
+        }
       }
+
     }
 
   /* Nunca deveria chegar aqui */
